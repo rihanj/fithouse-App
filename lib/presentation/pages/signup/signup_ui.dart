@@ -1,4 +1,5 @@
 // import 'dart:js_util';
+
 import 'package:fithouse_app/data/local/databasehelper.dart';
 import 'package:fithouse_app/data/model/user_model.dart';
 import 'package:fithouse_app/data/repository/user_repo.dart';
@@ -16,9 +17,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
-
-
 class SignupUI extends StatefulWidget {
   const SignupUI({Key? key}) : super(key: key);
 
@@ -32,6 +32,8 @@ class _SignupUIState extends State<SignupUI> {
   TextEditingController emailCodeController = TextEditingController();
   Database? _Database;
   bool isMobileNumberEntered = false;
+  var formKey = GlobalKey<FormState>();
+
   // bool isEmail(String input) => EmailValidator.validate(input);
   // bool isPhone(String input) => RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
   //         .hasMatch(input);
@@ -67,7 +69,6 @@ class _SignupUIState extends State<SignupUI> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: FHColor.appColor,
-
                   ),
                 ),
               ),
@@ -85,7 +86,8 @@ class _SignupUIState extends State<SignupUI> {
             fit: BoxFit.cover,
           ),
           Container(
-            margin: const EdgeInsets.only(left: 20.00,top: 120.00,right: 0.0,bottom:20.0),
+            margin: const EdgeInsets.only(
+                left: 20.00, top: 120.00, right: 0.0, bottom: 20.0),
             child: RichText(
               text: TextSpan(
                 children: <TextSpan>[
@@ -118,7 +120,8 @@ class _SignupUIState extends State<SignupUI> {
                       ..onTap = () {
                         // Handle login button tap
                         // Navigate to the login screen or perform any other action
-                        Navigator.pushNamed(context, RouteGenerator.signupRoute);
+                        Navigator.pushNamed(
+                            context, RouteGenerator.signupRoute);
                       },
                   ),
                 ],
@@ -127,7 +130,8 @@ class _SignupUIState extends State<SignupUI> {
           ),
           Center(
             child: Container(
-              margin: const EdgeInsets.only(left: 20.0,top: 150.0,right: 20.0,bottom: 20.0),
+              margin: const EdgeInsets.only(
+                  left: 20.0, top: 150.0, right: 20.0, bottom: 20.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
@@ -136,121 +140,141 @@ class _SignupUIState extends State<SignupUI> {
                 ],
               ),
               // color: Colors.white,
-              child:  SingleChildScrollView(
+              child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.all(10.00),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: SizedBox(
-                          height: 20,
-                          child: Text(
-                            'Full Name',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                      TextField(
-                        controller: fullNameController,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            // labelText: 'Full Name',
-                            filled: true,
-                            prefixIcon:  Icon(Icons.account_circle_sharp),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                              BorderSide(color: FHColor.bgTextFieldColor, width: 1.7),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            fillColor: FHColor.bgTextFieldColor,
-                            hintStyle: AppTheme.hintTextStyle,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            hintText: "Full Name",
-                            errorText: null,
-                            counterText: "",
-                            errorStyle:
-                            TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: SizedBox(
-                          height: 20,
-                          child: Text(
-                            'Phone Number',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                      IntlPhoneField(
-                        controller: mobileNumberController,
-                        keyboardType: TextInputType.phone,
-                        flagsButtonPadding: const EdgeInsets.all(8),
-                        dropdownIconPosition: IconPosition.trailing,
-                        decoration: InputDecoration(
-                          // labelText: 'Phone Number',
-                            filled: true,
-                            prefixIcon:  Icon(Icons.phone),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                              BorderSide(color: FHColor.bgTextFieldColor, width: 1.7),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            fillColor: FHColor.bgTextFieldColor,
-                            hintStyle: AppTheme.hintTextStyle,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            hintText: "xxxxxxxxxx",
-                            errorText: null,
-                            counterText: "",
-                            errorStyle:
-                            TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-                        ),
-                        initialCountryCode: 'SA',
-                        onChanged: (value) {
-                          print(value.completeNumber);
-                          setState(() {
-                            isMobileNumberEntered = value!=null ?true:false;
-                          });
-                        },
-                        onCountryChanged: (country) {
-                          print('Country changed to: ' + country.name);
-                        },
-                      ),
-                      Padding(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
                           padding: const EdgeInsets.all(15.0),
+                          child: SizedBox(
+                            height: 20,
+                            child: Text(
+                              'Full Name',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextFormField(
+                          controller: fullNameController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                              // labelText: 'Full Name',
+                              filled: true,
+                              prefixIcon: Icon(Icons.account_circle_sharp),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: FHColor.bgTextFieldColor,
+                                    width: 1.7),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              fillColor: FHColor.bgTextFieldColor,
+                              hintStyle: AppTheme.hintTextStyle,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              hintText: "Full Name",
+                              errorText: null,
+                              counterText: "",
+                              errorStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
+                          validator: (v) {
+                            if (v == null) {
+                              return "Full Name is Required *";
+                            } else if (v.isEmpty) {
+                              return "Full Name is Required *";
+                            }
+                            return null;
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: SizedBox(
+                            height: 20,
+                            child: Text(
+                              'Phone Number',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        IntlPhoneField(
+                          controller: mobileNumberController,
+                          keyboardType: TextInputType.phone,
+                          flagsButtonPadding: const EdgeInsets.all(8),
+                          dropdownIconPosition: IconPosition.trailing,
+                          decoration: InputDecoration(
+                              // labelText: 'Phone Number',
+                              filled: true,
+                              prefixIcon: Icon(Icons.phone),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: FHColor.bgTextFieldColor,
+                                    width: 1.7),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              fillColor: FHColor.bgTextFieldColor,
+                              hintStyle: AppTheme.hintTextStyle,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              hintText: "xxxxxxxxxx",
+                              errorText: null,
+                              counterText: "",
+                              errorStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
+                          // validator: (v) {
+                          //   if (v?.completeNumber != null) {
+                          //     return null;
+                          //   } else {
+                          //     return "Please Enter a Valid Number";
+                          //   }
+                          // },
+                          initialCountryCode: 'SA',
+                          onChanged: (value) {
+                            print(value.completeNumber);
+                            setState(() {
+                              isMobileNumberEntered =
+                                  value != null ? true : false;
+                            });
+                          },
+                          onCountryChanged: (country) {
+                            print('Country changed to: ' + country.name);
+                          },
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(15.0),
                           child: SizedBox(
                             height: 20,
                             child: Text(
@@ -263,7 +287,7 @@ class _SignupUIState extends State<SignupUI> {
                             ),
                           ),
                         ),
-                      TextField(
+                        TextFormField(
                           controller: emailCodeController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
@@ -271,8 +295,9 @@ class _SignupUIState extends State<SignupUI> {
                               filled: true,
                               prefixIcon: Icon(Icons.email_outlined),
                               enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: FHColor.bgTextFieldColor, width: 1.7),
+                                borderSide: BorderSide(
+                                    color: FHColor.bgTextFieldColor,
+                                    width: 1.7),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
@@ -292,52 +317,70 @@ class _SignupUIState extends State<SignupUI> {
                               hintText: "abc@gmail.com",
                               errorText: null,
                               counterText: "",
-                              errorStyle:
-                              TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-                          ),
+                              errorStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
+                          validator: (v) {
+                            if (v == null) {
+                              return "Email is Required *";
+                            } else if (v.isEmpty) {
+                              return "Email is Required *";
+                            }
+                            return null;
+                          },
                         ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
+                        SizedBox(height: 20),
+                        ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor:FHColor.appColor, // Text Color (Foreground color)
-                              side: BorderSide(width:2, color:FHColor.appColor), //border width and color
-                              elevation: 3, //elevation of button
-                              shape: RoundedRectangleBorder( //to set border radius to button
+                              backgroundColor: FHColor.appColor,
+                              // Text Color (Foreground color)
+                              side:
+                                  BorderSide(width: 2, color: FHColor.appColor),
+                              //border width and color
+                              elevation: 3,
+                              //elevation of button
+                              shape: RoundedRectangleBorder(
+                                //to set border radius to button
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              padding: EdgeInsets.all(15)
-                          ),
-                          onPressed: () async{
+                              padding: EdgeInsets.all(15)),
+                          onPressed: () async {
                             // Perform Signup logic here
-                            var conditon = await insertUser();
-                            if(conditon){
-                              Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
-                            }else{
-                              CSnackBar.errorSnackBar(context, "Phone / Email Already Exists");
+                            if (formKey.currentState!.validate()) {
+                              await insertUser(context);
                             }
+
+                            // if(conditon){
+                            //   Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
+                            // }else{
+                            //   CSnackBar.errorSnackBar(context, "Phone / Email Already Exists");
+                            // }
                             print("button clicked");
                             // getUser();
 
                             // Navigator.pushNamed(context, RouteGenerator.confirmRoute);
                           },
-                          child: Text('Continue',style: TextStyle(fontSize: 22,color:Colors.white)),
+                          child: Text('Continue',
+                              style:
+                                  TextStyle(fontSize: 22, color: Colors.white)),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: SizedBox(
-                          height: 20,
-                          child: Text(
-                            'By continuing, you agree to our Terms and Privacy Policy',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: SizedBox(
+                            height: 20,
+                            child: Text(
+                              'By continuing, you agree to our Terms and Privacy Policy',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -347,7 +390,6 @@ class _SignupUIState extends State<SignupUI> {
       ),
     );
   }
-
 
   //  open db & connect with database
   // Future<Database?> openDB() async {
@@ -359,27 +401,35 @@ class _SignupUIState extends State<SignupUI> {
   // }
 
   //insert user in user table
-  Future<bool> insertUser() async{
+  Future insertUser(context) async {
+    final mapData = {
+      'name': fullNameController.text.toString(),
+      'phone': mobileNumberController.text.toString(),
+      'email': emailCodeController.text.toString(),
+    };
+
     final response = await http.post(
       Uri.parse('http://172.105.60.113/fithouse/fithouse/api/signup.php'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        'title': fullNameController.text.toString(),
-      }),
+      body: jsonEncode(mapData),
     );
 
+    print(mapData);
     if (response.statusCode == 200 || response.statusCode == 201) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
 
-      var data = jsonDecode( response.body);
-      print("Reached here");
-      if(data["status"]){
-        return true;
-      }else{
-        return  false;
+      // var data = await json.decode(response.toString());
+      String jsonsDataString = response.body.toString(); //
+      var data = jsonDecode(jsonsDataString);
+
+      if (data["status"] == true) {
+        Navigator.pushNamed(context, RouteGenerator.loginRoute);
+        CSnackBar.successSnackBar(context, data["message"]);
+      } else {
+        CSnackBar.errorSnackBar(context, data["message"]);
       }
       print(data["status"]);
     } else {
@@ -396,41 +446,40 @@ class _SignupUIState extends State<SignupUI> {
     // await _Database?.close();
   }
 
-  // Future<void> getUser() async{
-  //   _Database = await openDB();
-  //   UserRepo userRepo = new UserRepo();
-  //   userRepo.getUsers(_Database);
-  //   // await _Database?.close();
-  // }
+// Future<void> getUser() async{
+//   _Database = await openDB();
+//   UserRepo userRepo = new UserRepo();
+//   userRepo.getUsers(_Database);
+//   // await _Database?.close();
+// }
 
-  // Future<void> checkLogin() async{
-  //   final response = await http.get(
-  //     Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php?phone=555555555'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'title': fullNameController.text.toString(),
-  //     }),
-  //   );
-  //
-  //   if (response.statusCode == 200 || response.statusCode == 201) {
-  //     // If the server did return a 201 CREATED response,
-  //     // then parse the JSON.
-  //     print("Reached here");
-  //     print(response);
-  //   } else {
-  //     // If the server did not return a 201 CREATED response,
-  //     // then throw an exception.
-  //     throw Exception('Failed to create album.');
-  //   }
-  //   // _Database = await openDB();
-  //   // // UserRepo userRepo = new UserRepo();
-  //   // // userRepo.createtable(_Database);
-  //   //
-  //   // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
-  //   // await _Database?.insert("users",userModel.toMap());
-  //   // await _Database?.close();
-  // }
-
+// Future<void> checkLogin() async{
+//   final response = await http.get(
+//     Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php?phone=555555555'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//     body: jsonEncode(<String, String>{
+//       'title': fullNameController.text.toString(),
+//     }),
+//   );
+//
+//   if (response.statusCode == 200 || response.statusCode == 201) {
+//     // If the server did return a 201 CREATED response,
+//     // then parse the JSON.
+//     print("Reached here");
+//     print(response);
+//   } else {
+//     // If the server did not return a 201 CREATED response,
+//     // then throw an exception.
+//     throw Exception('Failed to create album.');
+//   }
+//   // _Database = await openDB();
+//   // // UserRepo userRepo = new UserRepo();
+//   // // userRepo.createtable(_Database);
+//   //
+//   // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
+//   // await _Database?.insert("users",userModel.toMap());
+//   // await _Database?.close();
+// }
 }

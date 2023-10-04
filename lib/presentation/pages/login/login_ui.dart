@@ -1,15 +1,18 @@
+import 'dart:convert';
+
 import 'package:fithouse_app/data/data_provider/cache_service_imp.dart';
 import 'package:fithouse_app/presentation/themes/f_h_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/route_generator.dart';
+import '../../widgets/c-snack_bar.dart';
 import '../../widgets/f_h_back_app_bar.dart';
 import '../../widgets/f_h_themes.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-
+import 'package:http/http.dart' as http;
 class LoginUI extends StatefulWidget {
   const LoginUI({Key? key}) : super(key: key);
 
@@ -30,7 +33,7 @@ class _LoginUIState extends State<LoginUI> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        leading: Icon(
+        leading: const Icon(
           Icons.arrow_back,
           color: FHColor.appColor,
           size: 24,
@@ -41,14 +44,14 @@ class _LoginUIState extends State<LoginUI> {
             children: [
               IconButton(
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.support_agent,
                   color: FHColor.appColor,
                   size: 24,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
+              const Padding(
+                padding: EdgeInsets.only(right: 12.0),
                 child: Text(
                   'Help',
                   style: TextStyle(
@@ -79,7 +82,7 @@ class _LoginUIState extends State<LoginUI> {
                 children: <TextSpan>[
                   TextSpan(
                     text: 'Log in'.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: FHColor.whiteColor,
                       fontFamily: 'BebasNeue',
                       fontWeight: FontWeight.w700,
@@ -95,7 +98,7 @@ class _LoginUIState extends State<LoginUI> {
                   ),
                   TextSpan(
                     text: '  Sign up'.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white54,
                       fontFamily: 'BebasNeue',
                       fontWeight: FontWeight.w700,
@@ -118,7 +121,7 @@ class _LoginUIState extends State<LoginUI> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(color: Colors.white, spreadRadius: 3),
                 ],
               ),
@@ -130,8 +133,8 @@ class _LoginUIState extends State<LoginUI> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: SizedBox(
                           height: 20,
                           child: Text(
@@ -163,7 +166,7 @@ class _LoginUIState extends State<LoginUI> {
                               fillColor: FHColor.bgTextFieldColor,
                               hintStyle: AppTheme.hintTextStyle,
                               border: OutlineInputBorder(
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Colors.red,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
@@ -194,8 +197,8 @@ class _LoginUIState extends State<LoginUI> {
                       ),
                       Visibility(
                         visible: isMobileNumberEntered,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
                           child: SizedBox(
                             height: 20,
                             child: Text(
@@ -262,6 +265,7 @@ class _LoginUIState extends State<LoginUI> {
                           onPressed: () {
                             // Perform login or verification logic here
                             CacheServiceImp().setLogin(false);
+                            loginUser(context);
                           },
                           child: Text('Continue',style: TextStyle(fontSize: 22,color:Colors.white)),
                         ),
@@ -276,4 +280,48 @@ class _LoginUIState extends State<LoginUI> {
     );
 
   }
+  Future loginUser(context) async {
+    final mapData = {
+      'phone': mobileNumberController.text.toString(),
+
+    };
+
+    final response = await http.post(
+      Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(mapData),
+    );
+
+    print(mapData);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+
+      // var data = await json.decode(response.toString());
+      String jsonsDataString = response.body.toString(); //
+      var data = jsonDecode(jsonsDataString);
+
+      if (data["status"] == true) {
+    Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
+        CSnackBar.successSnackBar(context, data["message"]);
+      } else {
+        CSnackBar.errorSnackBar(context, data["message"]);
+      }
+      print(data["status"]);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create album.');
+    }
+    // _Database = await openDB();
+    // // UserRepo userRepo = new UserRepo();
+    // // userRepo.createtable(_Database);
+    //
+    // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
+    // await _Database?.insert("users",userModel.toMap());
+    // await _Database?.close();
+  }
 }
+

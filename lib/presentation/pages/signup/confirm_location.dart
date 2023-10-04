@@ -317,7 +317,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                   children: [
                     autoComplete(),
                     const SizedBox(
-                      height: 600,
+                      height: 450,
                     ),
                     locationsWidget(),
                     const Spacer(),
@@ -345,7 +345,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               // _controller.animateCamera(CameraUpdate.newCameraPosition(
               //     const CameraPosition(target: LatLng(0, 0))));
 
-              Navigator.pushNamed(context, RouteGenerator.fitnessRoute);
+              Navigator.pushNamed(context, RouteGenerator.activeRoute);
 
             },
             child: Text(

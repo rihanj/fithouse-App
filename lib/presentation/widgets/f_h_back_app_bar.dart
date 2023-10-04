@@ -8,11 +8,18 @@ class FHAppWidget{
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
-      leading: Icon(
-        Icons.arrow_back,
+      leading:
+      IconButton(
+        iconSize: 24,
         color: FHColor.appColor,
-        size: 24,
+        icon: const Icon(
+          Icons.arrow_back,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
+
       title: Text(
         "fithouse".toUpperCase(),
         style: TextStyle(
