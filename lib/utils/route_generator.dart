@@ -8,6 +8,7 @@ import 'package:fithouse_app/presentation/pages/signup/active_list.dart';
 import 'package:fithouse_app/presentation/pages/signup/signup_ui.dart';
 import 'package:fithouse_app/presentation/pages/signup/target_weight.dart';
 import 'package:flutter/material.dart';
+import '../presentation/bottom_bar/bottom-bar.dart';
 import '../presentation/pages/Home/Home.dart';
 import '../presentation/pages/login/login_ui.dart';
 import '../presentation/pages/onboarding/on_bording_screen.dart';
@@ -31,6 +32,7 @@ class RouteGenerator {
   static const String notEatRoute = "/notEatRoute";
   static const String dietaryRoute = "/dietaryRoute";
   static const String afterLogin = "/Home";
+  static const String bottomBar = "/BottomBar";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -60,6 +62,9 @@ class RouteGenerator {
         return PageNavigation.push(MultiSelectableContainers(), false);
       case dietaryRoute:
         return PageNavigation.push(DietaryPlan(), false);
+
+        case bottomBar:
+        return PageNavigation.push(BottomBar(), false);
 
       case afterLogin:
         return PageNavigation.push(Home(), false);

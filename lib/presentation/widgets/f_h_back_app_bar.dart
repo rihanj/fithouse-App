@@ -22,7 +22,7 @@ class FHAppWidget{
 
       title: Text(
         "fithouse".toUpperCase(),
-        style: TextStyle(
+        style: const TextStyle(
           fontFamily: 'BebasNeue',
           fontWeight: FontWeight.w700,
           fontSize: 30,

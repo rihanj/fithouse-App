@@ -13,7 +13,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:localstorage/localstorage.dart';
 class LoginUI extends StatefulWidget {
   const LoginUI({Key? key}) : super(key: key);
 
@@ -314,10 +314,16 @@ class _LoginUIState extends State<LoginUI> {
       // var data = await json.decode(response.toString());
       String jsonsDataString = response.body.toString(); //
       var data = jsonDecode(jsonsDataString);
+
       print("frvr-->" + jsonsDataString);
 
       if (data["status"] == true) {
-        Navigator.pushNamed(context, RouteGenerator.afterLogin);
+        final LocalStorage storage = LocalStorage('user-info');
+        storage.setItem('info', jsonsDataString);
+
+        print("after store the data----->>> ${storage.getItem('info')}");
+
+        Navigator.pushNamed(context, RouteGenerator.bottomBar);
         CSnackBar.successSnackBar(context, data["message"]);
       } else {
         CSnackBar.errorSnackBar(context, data["message"]);
