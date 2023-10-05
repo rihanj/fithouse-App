@@ -13,6 +13,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:http/http.dart' as http;
+
 class LoginUI extends StatefulWidget {
   const LoginUI({Key? key}) : super(key: key);
 
@@ -58,7 +59,6 @@ class _LoginUIState extends State<LoginUI> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: FHColor.appColor,
-
                   ),
                 ),
               ),
@@ -76,7 +76,8 @@ class _LoginUIState extends State<LoginUI> {
             fit: BoxFit.cover,
           ),
           Container(
-            margin: const EdgeInsets.only(left: 20.00,top: 120.00,right: 0.0,bottom:0.0),
+            margin: const EdgeInsets.only(
+                left: 20.00, top: 120.00, right: 0.0, bottom: 0.0),
             child: RichText(
               text: TextSpan(
                 children: <TextSpan>[
@@ -109,7 +110,8 @@ class _LoginUIState extends State<LoginUI> {
                       ..onTap = () {
                         // Handle login button tap
                         // Navigate to the login screen or perform any other action
-                        Navigator.pushNamed(context, RouteGenerator.signupRoute);
+                        Navigator.pushNamed(
+                            context, RouteGenerator.signupRoute);
                       },
                   ),
                 ],
@@ -117,28 +119,94 @@ class _LoginUIState extends State<LoginUI> {
             ),
           ),
           Container(
-              margin: const EdgeInsets.only(left: 20.0,top:240.0,right: 20.0,bottom: 20.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                boxShadow: const [
-                  BoxShadow(color: Colors.white, spreadRadius: 3),
-                ],
-              ),
-              // color: Colors.white,
-              child:  SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.00),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Padding(
+            margin: const EdgeInsets.only(
+                left: 20.0, top: 240.0, right: 20.0, bottom: 20.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(color: Colors.white, spreadRadius: 3),
+              ],
+            ),
+            // color: Colors.white,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(10.00),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        height: 20,
+                        child: Text(
+                          'Phone Number',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      // visible: isMobileNumberEntered,
+                      child: IntlPhoneField(
+                        controller: mobileNumberController,
+                        keyboardType: TextInputType.phone,
+                        flagsButtonPadding: const EdgeInsets.all(8),
+                        dropdownIconPosition: IconPosition.trailing,
+                        decoration: InputDecoration(
+                            // labelText: 'Phone Number',
+                            filled: true,
+                            prefixIcon: Icon(Icons.phone),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: FHColor.bgTextFieldColor, width: 1.7),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            fillColor: FHColor.bgTextFieldColor,
+                            hintStyle: AppTheme.hintTextStyle,
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            hintText: "xxxxxxxxxx",
+                            errorText: null,
+                            counterText: "",
+                            errorStyle: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold)),
+                        initialCountryCode: 'SA',
+                        onChanged: (value) {
+                          print(value.completeNumber);
+                          setState(() {
+                            isMobileNumberEntered =
+                                value != null ? true : false;
+                          });
+                        },
+                        onCountryChanged: (country) {
+                          print('Country changed to: ' + country.name);
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: isMobileNumberEntered,
+                      child: const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: SizedBox(
                           height: 20,
                           child: Text(
-                            'Phone Number',
+                            'Verification Code',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,
@@ -147,143 +215,87 @@ class _LoginUIState extends State<LoginUI> {
                           ),
                         ),
                       ),
-                      Visibility(
-                        // visible: isMobileNumberEntered,
-                        child: IntlPhoneField(
-                          controller: mobileNumberController,
-                          keyboardType: TextInputType.phone,
-                          flagsButtonPadding: const EdgeInsets.all(8),
-                          dropdownIconPosition: IconPosition.trailing,
-                          decoration: InputDecoration(
-                            // labelText: 'Phone Number',
-                              filled: true,
-                              prefixIcon:  Icon(Icons.phone),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: FHColor.bgTextFieldColor, width: 1.7),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
-                              border: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: "xxxxxxxxxx",
-                              errorText: null,
-                              counterText: "",
-                              errorStyle:
-                              TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-                          ),
-                          initialCountryCode: 'SA',
-                          onChanged: (value) {
-                            print(value.completeNumber);
-                            setState(() {
-                            isMobileNumberEntered = value!=null ?true:false;
-                            });
-                          },
-                          onCountryChanged: (country) {
-                            print('Country changed to: ' + country.name);
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: isMobileNumberEntered,
-                        child: const Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: SizedBox(
-                            height: 20,
-                            child: Text(
-                              'Verification Code',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: isMobileNumberEntered,
-                        child: TextField(
-                          controller: verificationCodeController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                    ),
+                    Visibility(
+                      visible: isMobileNumberEntered,
+                      child: TextField(
+                        controller: verificationCodeController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
                             // labelText: 'Verification Code',
-                              filled: true,
-                              prefixIcon: Icon(Icons.lock),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: FHColor.bgTextFieldColor, width: 1.7),
-                                borderRadius: BorderRadius.circular(8.0),
+                            filled: true,
+                            prefixIcon: Icon(Icons.lock),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: FHColor.bgTextFieldColor, width: 1.7),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            fillColor: FHColor.bgTextFieldColor,
+                            hintStyle: AppTheme.hintTextStyle,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red,
                               ),
-                              fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red,
                               ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: "Verification Code",
-                              errorText: null,
-                              counterText: "",
-                              errorStyle:
-                              TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-                          ),
-                        ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            hintText: "Verification Code",
+                            errorText: null,
+                            counterText: "",
+                            errorStyle: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold)),
                       ),
-                      SizedBox(height: 20),
-                      Visibility(
-                        // visible: isMobileNumberEntered,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              // foregroundColor: isMobileNumberEntered?FHColor.appColor:Colors.white54,
-                              backgroundColor:isMobileNumberEntered?FHColor.appColor:Colors.white54, // Text Color (Foreground color)
-                              side: BorderSide(width:0, color:isMobileNumberEntered?FHColor.appColor:Colors.white54), //border width and color
-                              elevation: 3, //elevation of button
-                              shape: RoundedRectangleBorder( //to set border radius to button
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: EdgeInsets.all(15)
-                          ),
-                          onPressed: () {
-                            // Perform login or verification logic here
-                            CacheServiceImp().setLogin(false);
-                            loginUser(context);
-                          },
-                          child: Text('Continue',style: TextStyle(fontSize: 22,color:Colors.white)),
-                        ),
+                    ),
+                    SizedBox(height: 20),
+                    Visibility(
+                      // visible: isMobileNumberEntered,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            // foregroundColor: isMobileNumberEntered?FHColor.appColor:Colors.white54,
+                            backgroundColor: isMobileNumberEntered
+                                ? FHColor.appColor
+                                : Colors
+                                    .white54, // Text Color (Foreground color)
+                            side: BorderSide(
+                                width: 0,
+                                color: isMobileNumberEntered
+                                    ? FHColor.appColor
+                                    : Colors.white54), //border width and color
+                            elevation: 3, //elevation of button
+                            shape: RoundedRectangleBorder(
+                              //to set border radius to button
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.all(15)),
+                        onPressed: () {
+                          // Perform login or verification logic here
+                          CacheServiceImp().setLogin(false);
+                          loginUser(context);
+                        },
+                        child: Text('Continue',
+                            style:
+                                TextStyle(fontSize: 22, color: Colors.white)),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
-
   }
+
   Future loginUser(context) async {
     final mapData = {
-      'phone': mobileNumberController.text.toString(),
-
+      "phone": mobileNumberController.text,
     };
 
     final response = await http.post(
@@ -295,16 +307,17 @@ class _LoginUIState extends State<LoginUI> {
     );
 
     print(mapData);
+    // print(response.body.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
-
       // var data = await json.decode(response.toString());
       String jsonsDataString = response.body.toString(); //
       var data = jsonDecode(jsonsDataString);
+      print("frvr-->" + jsonsDataString);
 
       if (data["status"] == true) {
-    Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
+        Navigator.pushNamed(context, RouteGenerator.afterLogin);
         CSnackBar.successSnackBar(context, data["message"]);
       } else {
         CSnackBar.errorSnackBar(context, data["message"]);
@@ -324,4 +337,3 @@ class _LoginUIState extends State<LoginUI> {
     // await _Database?.close();
   }
 }
-

@@ -104,7 +104,7 @@ class _SignupUIState extends State<SignupUI> {
                       ..onTap = () {
                         // Handle login button tap
                         // Navigate to the login screen or perform any other action
-                        Navigator.pushNamed(context, RouteGenerator.loginRoute);
+                        Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
                       },
                   ),
                   TextSpan(
