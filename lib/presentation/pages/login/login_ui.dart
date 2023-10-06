@@ -4,6 +4,7 @@ import 'package:fithouse_app/data/data_provider/cache_service_imp.dart';
 import 'package:fithouse_app/presentation/themes/f_h_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../../utils/App_data.dart';
 import '../../../utils/route_generator.dart';
 import '../../widgets/c-snack_bar.dart';
 import '../../widgets/f_h_back_app_bar.dart';
@@ -320,6 +321,10 @@ class _LoginUIState extends State<LoginUI> {
       if (data["status"] == true) {
         final LocalStorage storage = LocalStorage('user-info');
         storage.setItem('info', jsonsDataString);
+        var data = await jsonDecode(storage.getItem('info'))!;
+
+
+        AppData.username = data["full_name"];
 
         print("after store the data----->>> ${storage.getItem('info')}");
 

@@ -1,18 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:lottie/lottie.dart';
 
+import '../../../utils/App_data.dart';
 import '../../themes/dimens.dart';
 import '../../themes/f_h_colors.dart';
 import '../../widgets/f_h_back_app_bar.dart';
+import 'cubit/home_cubit.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+    HomeCubit cubit = context.watch<HomeCubit>();
     return
       SingleChildScrollView(
           child: Padding(
@@ -21,25 +26,42 @@ class Home extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Dimens.height(10),
-              FutureBuilder(
-                future: getName(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return
-                    Text(
-                      "Welcome Back ${snapshot.data.toString()}",
-                      style: const TextStyle(
-                        color: FHColor.appColor,
-                        fontFamily: 'BebasNeue',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        letterSpacing: 2,
-                      ),
-                    );
-                  } else if (snapshot.hasError) return Text(snapshot.error.toString());
-                 return Text("Await for data");
-                },
-              ),
+              BlocBuilder<HomeCubit, HomeCreateState>(builder: (context, state){
+                if(state is HomeLoadingState ){
+                  return const Center(child: CircularProgressIndicator(),);
+                }
+                else{
+                  return  Text(
+                    "Welcome Back ${AppData.username}",
+                    style: const TextStyle(
+                      color: FHColor.appColor,
+                      fontFamily: 'BebasNeue',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      letterSpacing: 2,
+                    ),
+                  );
+                }
+              }),
+              // FutureBuilder(
+              //   future: cubit.getName(),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasData) {
+              //       return
+              //       Text(
+              //         "Welcome Back ${snapshot.data.toString()}",
+              //         style: const TextStyle(
+              //           color: FHColor.appColor,
+              //           fontFamily: 'BebasNeue',
+              //           fontWeight: FontWeight.w600,
+              //           fontSize: 18,
+              //           letterSpacing: 2,
+              //         ),
+              //       );
+              //     } else if (snapshot.hasError) return Text(snapshot.error.toString());
+              //    return Text("Await for data");
+              //   },
+              // ),
 
                 Text(
                   DateFormat('EEEE').format(DateTime.now()),
@@ -51,7 +73,7 @@ class Home extends StatelessWidget {
                     letterSpacing: 2,
                   ),
                 ),
-                const DefaultTabController(
+                 DefaultTabController(
 
                   length: 7,
                   initialIndex: 0,
@@ -62,7 +84,7 @@ class Home extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
 
-                          TabBar(indicatorColor: Colors.green,
+                          const TabBar(indicatorColor: Colors.green,
                             labelColor: Colors.green, //<-- selected text color
                             unselectedLabelColor: Colors.black,
                             isScrollable: true,
@@ -154,7 +176,7 @@ class Home extends StatelessWidget {
                           Expanded(
                             // height: SizeConfig.screenHeight / 1.5,
                             child: TabBarView(children: <Widget>[
-                              Text("hello"),
+                             Center(child: Lottie.asset("assets/lottie/under_construction.json",frameRate: FrameRate.max)),
                               Text("hello"),
                               Text("hello"), Text("hello"),
                               Text("hello"),
@@ -318,10 +340,5 @@ class Home extends StatelessWidget {
     // );
   }
 
-  getName()async{
-    final LocalStorage storage =  LocalStorage('user-info');
-   var data = await jsonDecode(storage.getItem('info'))!;
-   print(data);
-    return data["full_name"];
-  }
+
 }
