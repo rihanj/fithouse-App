@@ -70,6 +70,9 @@ class RouteGenerator {
 
       case bottomBar:
         return PageNavigation.push(BottomBar(), false);
+        // PageNavigation.push(
+        //     child: BlocProvider(
+        //         create: (context) => OmProfileCubit(), child: OMProfile()));
 
       case afterLogin:
         return PageNavigation.push(Home(), false);

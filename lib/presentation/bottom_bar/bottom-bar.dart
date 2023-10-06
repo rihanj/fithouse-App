@@ -1,5 +1,7 @@
+import 'package:fithouse_app/presentation/pages/Home/cubit/home_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../pages/Home/Home.dart';
 import '../themes/f_h_colors.dart';
@@ -71,7 +73,8 @@ class _BottomBar extends State<BottomBar> {
   Widget _buildBody() {
     switch (currentIndex) {
       case 0:
-        return const Home();
+        return BlocProvider(create: (context) => HomeCubit(), child: Home());
+
       case 1:
         return const Center(child: Text('Search'));
       case 2:
