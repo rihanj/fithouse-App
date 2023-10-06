@@ -11,15 +11,18 @@ import 'package:flutter/material.dart';
 import '../presentation/bottom_bar/bottom-bar.dart';
 import '../presentation/pages/Home/Home.dart';
 import '../presentation/pages/login/login_ui.dart';
+// import '../presentation/pages/login/login_otp.dart';
 import '../presentation/pages/onboarding/on_bording_screen.dart';
 import '../presentation/pages/signup/delivery_location.dart';
 import '../presentation/pages/signup/confirm_location.dart';
 import '../presentation/pages/signup/not_eat.dart';
+import '../presentation/pages/signup/otp.dart';
 import '../presentation/widgets/page_navigation/page_navigation.dart';
 
 class RouteGenerator {
   static const String loginRoute = "/login";
   static const String signupRoute = "/signup";
+  static const String aftersignup = "/otp";
   static const String deliveryRoute = "/delivery_location";
   static const String confirmRoute = "/confirm_location";
   static const String fitnessRoute = "/fitness_goal";
@@ -42,6 +45,8 @@ class RouteGenerator {
         return PageNavigation.push(LoginUI(), false);
       case signupRoute:
         return PageNavigation.push(SignupUI(), false);
+      case aftersignup:
+        return PageNavigation.push(Otp(), false);
       case deliveryRoute:
         return PageNavigation.push(DeliveryLocation(), false);
       case confirmRoute:
@@ -63,7 +68,7 @@ class RouteGenerator {
       case dietaryRoute:
         return PageNavigation.push(DietaryPlan(), false);
 
-        case bottomBar:
+      case bottomBar:
         return PageNavigation.push(BottomBar(), false);
 
       case afterLogin:

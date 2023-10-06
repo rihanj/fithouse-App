@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       onGenerateRoute: RouteGenerator.generateRoute,
-      home:  SplashPage(),
+      home: SplashPage(),
     );
   }
 }
@@ -34,37 +34,37 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration(milliseconds: 1200)).then((value) {
-      Future.delayed(Duration(milliseconds: 1200)).then((value) async{
-
+      Future.delayed(Duration(milliseconds: 1200)).then((value) async {
         bool isLogin = await CacheServiceImp().isLogin();
-        if(isLogin){
-          Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
-        }else{
+        if (isLogin) {
+          Navigator.pushNamed(context, RouteGenerator.afterLogin);
+        } else {
           Navigator.pushNamed(context, RouteGenerator.onBoardsRoute);
         }
-
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: FHColor.appColor,
       body: Center(
-        child:  Text("fithouse".toUpperCase(),style: TextStyle(
-          fontFamily: 'BebasNeue',
-          fontWeight: FontWeight.w700,
-          fontSize: 42,
-          letterSpacing: 5,
-          color: Colors.white,
+        child: Text(
+          "fithouse".toUpperCase(),
+          style: TextStyle(
+            fontFamily: 'BebasNeue',
+            fontWeight: FontWeight.w700,
+            fontSize: 42,
+            letterSpacing: 5,
+            color: Colors.white,
           ),
-      ),
+        ),
       ),
     );
   }

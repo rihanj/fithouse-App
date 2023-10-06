@@ -1,44 +1,24 @@
-// import 'dart:js_util';
-
-import 'package:fithouse_app/data/local/databasehelper.dart';
-import 'package:fithouse_app/data/model/user_model.dart';
-import 'package:fithouse_app/data/repository/user_repo.dart';
-import 'package:fithouse_app/presentation/themes/f_h_colors.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
+
 import '../../../utils/route_generator.dart';
-import '../../widgets/c-snack_bar.dart';
-import '../../widgets/f_h_back_app_bar.dart';
+import '../../themes/f_h_colors.dart';
 import '../../widgets/f_h_themes.dart';
-import 'package:lottie/lottie.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:synchronized/synchronized.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:http/http.dart' as http;
 
-import 'dart:convert';
-
-class SignupUI extends StatefulWidget {
-  const SignupUI({Key? key}) : super(key: key);
+class Otp extends StatefulWidget {
+  const Otp({super.key});
 
   @override
-  State<SignupUI> createState() => _SignupUIState();
+  State<Otp> createState() => _OtpState();
 }
 
-class _SignupUIState extends State<SignupUI> {
-  TextEditingController fullNameController = TextEditingController();
-  TextEditingController mobileNumberController = TextEditingController();
-  TextEditingController emailCodeController = TextEditingController();
-  Database? _Database;
-  bool isMobileNumberEntered = false;
+class _OtpState extends State<Otp> {
+  TextEditingController otpController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
-  // bool isEmail(String input) => EmailValidator.validate(input);
-  // bool isPhone(String input) => RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
-  //         .hasMatch(input);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,10 +146,10 @@ class _SignupUIState extends State<SignupUI> {
                           ),
                         ),
                         TextFormField(
-                          controller: fullNameController,
+                          controller: otpController,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
-                              // labelText: 'Full Name',
+                              // labelText: 'OTP',
                               filled: true,
                               prefixIcon: Icon(Icons.account_circle_sharp),
                               enabledBorder: OutlineInputBorder(
@@ -221,60 +201,6 @@ class _SignupUIState extends State<SignupUI> {
                             ),
                           ),
                         ),
-                        IntlPhoneField(
-                          controller: mobileNumberController,
-                          keyboardType: TextInputType.phone,
-                          flagsButtonPadding: const EdgeInsets.all(8),
-                          dropdownIconPosition: IconPosition.trailing,
-                          decoration: InputDecoration(
-                              // labelText: 'Phone Number',
-                              filled: true,
-                              prefixIcon: Icon(Icons.phone),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: FHColor.bgTextFieldColor,
-                                    width: 1.7),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: "xxxxxxxxxx",
-                              errorText: null,
-                              counterText: "",
-                              errorStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold)),
-                          // validator: (v) {
-                          //   if (v?.completeNumber != null) {
-                          //     return null;
-                          //   } else {
-                          //     return "Please Enter a Valid Number";
-                          //   }
-                          // },
-                          initialCountryCode: 'SA',
-                          onChanged: (value) {
-                            print(value.completeNumber);
-                            setState(() {
-                              isMobileNumberEntered =
-                                  value != null ? true : false;
-                            });
-                          },
-                          onCountryChanged: (country) {
-                            print('Country changed to: ' + country.name);
-                          },
-                        ),
                         const Padding(
                           padding: EdgeInsets.all(15.0),
                           child: SizedBox(
@@ -288,48 +214,6 @@ class _SignupUIState extends State<SignupUI> {
                               ),
                             ),
                           ),
-                        ),
-                        TextFormField(
-                          controller: emailCodeController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                              // labelText: 'Email',
-                              filled: true,
-                              prefixIcon: Icon(Icons.email_outlined),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: FHColor.bgTextFieldColor,
-                                    width: 1.7),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              hintText: "abc@gmail.com",
-                              errorText: null,
-                              counterText: "",
-                              errorStyle: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold)),
-                          validator: (v) {
-                            if (v == null) {
-                              return "Email is Required *";
-                            } else if (v.isEmpty) {
-                              return "Email is Required *";
-                            }
-                            return null;
-                          },
                         ),
                         SizedBox(height: 20),
                         ElevatedButton(
@@ -350,9 +234,8 @@ class _SignupUIState extends State<SignupUI> {
                           onPressed: () async {
                             // Perform Signup logic here
                             if (formKey.currentState!.validate()) {
-                              await insertUser(context);
+                              await ValidateOtp(context);
                             }
-
                             print("button clicked");
                             // getUser();
                           },
@@ -386,36 +269,20 @@ class _SignupUIState extends State<SignupUI> {
     );
   }
 
-  //  open db & connect with database
-  // Future<Database?> openDB() async {
-  //   // DatabaseHelper databaseHelper = DatabaseHelper();
-  //   // Database db = await databaseHelper.database;
-  //    _Database = await DatabaseHelper().database;
-  //    print("Anjana");print(_Database );
-  //    return _Database;
-  // }
-
-  //insert user in user table
-  Future insertUser(context) async {
+  Future ValidateOtp(context) async {
     final mapData = {
-      'name': fullNameController.text.toString().trim(),
-      'phone': mobileNumberController.text.toString(),
-      'email': emailCodeController.text.toString(),
+      'otp': otpController.text.toString(),
     };
-    final LocalStorage storage = LocalStorage('user-info');
-    storage.setItem('Signup_data', mapData);
 
-    print("after store the data----->>> ${storage.getItem('Signup_data')}");
-    var setList = await OtpVaidate();
-    // final response = await http.post(
-    //   Uri.parse('http://172.105.60.113/fithouse/fithouse/api/signup.php'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(mapData),
-    // );
-    //
-    // print(mapData);
+    final response = await http.post(
+      Uri.parse('http://172.105.60.113/fithouse/fithouse/api/signup.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(mapData),
+    );
+
+    print(mapData);
     // if (response.statusCode == 200 || response.statusCode == 201) {
     //   // If the server did return a 201 CREATED response,
     //   // then parse the JSON.
@@ -431,8 +298,7 @@ class _SignupUIState extends State<SignupUI> {
     //     CSnackBar.errorSnackBar(context, data["message"]);
     //   }
     //   print(data["status"]);
-    // }
-    // else {
+    // } else {
     //   // If the server did not return a 201 CREATED response,
     //   // then throw an exception.
     //   throw Exception('Failed to create album.');
@@ -445,82 +311,4 @@ class _SignupUIState extends State<SignupUI> {
     // await _Database?.insert("users",userModel.toMap());
     // await _Database?.close();
   }
-
-  Future OtpVaidate() async {
-    // print("otp validate function");
-    final mapData = {
-      'userName': "n.elsaber@emc.sa",
-      'numbers': mobileNumberController.text.toString(),
-      'userSender': "Boxing",
-      "apiKey": "4814ce8181d8ca9e112a4f1a1b222158",
-      "msg": "Signup Otp"
-    };
-
-    final response = await http.post(
-      Uri.parse('https://www.msegat.com/gw/sendsms.php'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(mapData),
-    );
-
-    print(mapData);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // var data = await json.decode(response.toString());
-      var otp_data = {"otp": "123456"};
-      final LocalStorage storage = await LocalStorage('Signup-otp');
-      storage.setItem('Signup_otp', otp_data);
-      print("Signup otp----->>> ${storage.getItem('Signup_otp')}");
-
-      String jsonsDataString = response.body.toString(); //
-      var data = jsonDecode(jsonsDataString);
-      print(data);
-      // if (data["status"] == true) {
-      Navigator.pushNamed(context, RouteGenerator.aftersignup);
-      //   CSnackBar.successSnackBar(context, data["message"]);
-      // } else {
-      //   CSnackBar.errorSnackBar(context, data["message"]);
-      // }
-      // print(data["status"]);
-    } else {
-      throw Exception('Failed to create album.');
-    }
-  }
-
-// Future<void> getUser() async{
-//   _Database = await openDB();
-//   UserRepo userRepo = new UserRepo();
-//   userRepo.getUsers(_Database);
-//   // await _Database?.close();
-// }
-
-// Future<void> checkLogin() async{
-//   final response = await http.get(
-//     Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php?phone=555555555'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{
-//       'title': fullNameController.text.toString(),
-//     }),
-//   );
-//
-//   if (response.statusCode == 200 || response.statusCode == 201) {
-//     // If the server did return a 201 CREATED response,
-//     // then parse the JSON.
-//     print("Reached here");
-//     print(response);
-//   } else {
-//     // If the server did not return a 201 CREATED response,
-//     // then throw an exception.
-//     throw Exception('Failed to create album.');
-//   }
-//   // _Database = await openDB();
-//   // // UserRepo userRepo = new UserRepo();
-//   // // userRepo.createtable(_Database);
-//   //
-//   // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
-//   // await _Database?.insert("users",userModel.toMap());
-//   // await _Database?.close();
-// }
 }
