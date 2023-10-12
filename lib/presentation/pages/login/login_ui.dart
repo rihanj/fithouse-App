@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:fithouse_app/data/data_provider/cache_service_imp.dart';
+import 'package:fithouse_app/presentation/pages/login/cubit/login_cubit.dart';
+import 'package:fithouse_app/presentation/pages/signup/confirm_location.dart';
 import 'package:fithouse_app/presentation/themes/f_h_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/App_data.dart';
 import '../../../utils/route_generator.dart';
 import '../../widgets/c-snack_bar.dart';
@@ -15,6 +19,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+
 class LoginUI extends StatefulWidget {
   const LoginUI({Key? key}) : super(key: key);
 
@@ -23,13 +28,62 @@ class LoginUI extends StatefulWidget {
 }
 
 class _LoginUIState extends State<LoginUI> {
-  bool isMobileNumberEntered = false;
+  bool isButtonEnabled = false;
 
-  TextEditingController mobileNumberController = TextEditingController();
-  TextEditingController verificationCodeController = TextEditingController();
+  bool isTimerRunning = false;
+  int secondsRemaining = 60;
+  Timer? _timer;
+
+  void startTimer() {
+    setState(() {
+      isTimerRunning = true;
+      secondsRemaining = 60;
+      isButtonEnabled = false;
+      String buttonText = 'Resend OTP $secondsRemaining';
+    });
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        secondsRemaining--;
+      });
+
+      if (secondsRemaining <= 0) {
+        stopTimer();
+      }
+    });
+  }
+
+  void stopTimer() {
+    setState(() {
+      isTimerRunning = false;
+      String buttonText = 'Resend OTP';
+      isButtonEnabled = true;
+    });
+
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+  }
+
+  @override
+  void dispose() {
+    stopTimer();
+    super.dispose();
+  }
+
+  void disableButtonForOneMinute() {
+    setState(() {
+      isButtonEnabled = false;
+    });
+
+    Timer(Duration(minutes: 1), () {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    LoginCubit cubit = context.watch<LoginCubit>();
     return Scaffold(
       backgroundColor: FHColor.whiteColor,
       appBar: AppBar(
@@ -154,7 +208,7 @@ class _LoginUIState extends State<LoginUI> {
                     Visibility(
                       // visible: isMobileNumberEntered,
                       child: IntlPhoneField(
-                        controller: mobileNumberController,
+                        controller: cubit.mobileNumberController,
                         keyboardType: TextInputType.phone,
                         flagsButtonPadding: const EdgeInsets.all(8),
                         dropdownIconPosition: IconPosition.trailing,
@@ -164,7 +218,7 @@ class _LoginUIState extends State<LoginUI> {
                             prefixIcon: Icon(Icons.phone),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: FHColor.bgTextFieldColor, width: 1.7),
+                                  color: FHColor.appColor, width: 1.7),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             fillColor: FHColor.bgTextFieldColor,
@@ -190,10 +244,10 @@ class _LoginUIState extends State<LoginUI> {
                         initialCountryCode: 'SA',
                         onChanged: (value) {
                           print(value.completeNumber);
-                          setState(() {
-                            isMobileNumberEntered =
-                                value != null ? true : false;
-                          });
+
+                          cubit.buttonDisable(value);
+
+                          print(cubit.disableButton);
                         },
                         onCountryChanged: (country) {
                           print('Country changed to: ' + country.name);
@@ -201,7 +255,7 @@ class _LoginUIState extends State<LoginUI> {
                       ),
                     ),
                     Visibility(
-                      visible: isMobileNumberEntered,
+                      visible: cubit.isMobileNumberEntered,
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: SizedBox(
@@ -218,17 +272,18 @@ class _LoginUIState extends State<LoginUI> {
                       ),
                     ),
                     Visibility(
-                      visible: isMobileNumberEntered,
+                      visible: cubit.isMobileNumberEntered,
                       child: TextField(
-                        controller: verificationCodeController,
+                        controller: cubit.verificationCodeController,
                         keyboardType: TextInputType.number,
+                        maxLength: 6,
                         decoration: InputDecoration(
                             // labelText: 'Verification Code',
                             filled: true,
                             prefixIcon: Icon(Icons.lock),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: FHColor.bgTextFieldColor, width: 1.7),
+                                  color: FHColor.appColor, width: 1.7),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             fillColor: FHColor.bgTextFieldColor,
@@ -257,32 +312,77 @@ class _LoginUIState extends State<LoginUI> {
                     Visibility(
                       // visible: isMobileNumberEntered,
                       child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            // foregroundColor: isMobileNumberEntered?FHColor.appColor:Colors.white54,
-                            backgroundColor: isMobileNumberEntered
-                                ? FHColor.appColor
-                                : Colors
-                                    .white54, // Text Color (Foreground color)
-                            side: BorderSide(
-                                width: 0,
-                                color: isMobileNumberEntered
-                                    ? FHColor.appColor
-                                    : Colors.white54), //border width and color
-                            elevation: 3, //elevation of button
-                            shape: RoundedRectangleBorder(
-                              //to set border radius to button
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.all(15)),
-                        onPressed: () {
-                          // Perform login or verification logic here
-                          CacheServiceImp().setLogin(false);
-                          loginUser(context);
-                        },
-                        child: Text('Continue',
-                            style:
-                                TextStyle(fontSize: 22, color: Colors.white)),
-                      ),
+                          style: ElevatedButton.styleFrom(
+                              // foregroundColor: isMobileNumberEntered?FHColor.appColor:Colors.white54,
+                              backgroundColor: cubit.disableButton
+                                  ? FHColor.appColor
+                                  : Colors.white54,
+                              // Text Color (Foreground color)
+                              side: BorderSide(
+                                  width: 0,
+                                  color: cubit.disableButton
+                                      ? FHColor.appColor
+                                      : Colors.white54),
+                              //border width and color
+                              elevation: 3,
+                              //elevation of button
+                              shape: RoundedRectangleBorder(
+                                //to set border radius to button
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.all(15)),
+                          onPressed: () {
+                            // Perform login or verification logic here
+                            CacheServiceImp().setLogin(false);
+
+                            cubit.isMobileNumberEntered
+                                ? cubit.loginUser(context)
+                                : cubit.send_otp(context);
+
+                            cubit.isMobileNumberEntered = true;
+                          },
+                          child: BlocBuilder<LoginCubit, LoginState>(
+                              builder: (context, state) {
+                            if (state is LoadingOp) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              return Text(
+                                  cubit.isMobileNumberEntered
+                                      ? "Continue"
+                                      : 'Send OTP',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.white));
+                            }
+                          })
+
+                          // cubit.isLoading
+                          //     ? const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       )
+                          //     : Text(
+                          //         cubit.isMobileNumberEntered
+                          //             ? "Continue"
+                          //             : 'Send OTP',
+                          //         style: TextStyle(
+                          //             fontSize: 22, color: Colors.white)),
+                          ),
+                    ),
+                    TextButton(
+                      onPressed: isButtonEnabled
+                          ? () {
+                              cubit.send_otp(context);
+                            }
+                          : null,
+                      child: Text(
+                          cubit.isMobileNumberEntered
+                              ? 'Resend OTP $secondsRemaining  seconds'
+                              : "",
+                          style: TextStyle(
+                              color: cubit.isMobileNumberEntered
+                                  ? Colors.grey
+                                  : Colors.white)),
                     ),
                   ],
                 ),
@@ -292,59 +392,5 @@ class _LoginUIState extends State<LoginUI> {
         ],
       ),
     );
-  }
-
-  Future loginUser(context) async {
-    final mapData = {
-      "phone": mobileNumberController.text,
-    };
-
-    final response = await http.post(
-      Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(mapData),
-    );
-
-    print(mapData);
-    // print(response.body.toString());
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-      // var data = await json.decode(response.toString());
-      String jsonsDataString = response.body.toString(); //
-      var data = jsonDecode(jsonsDataString);
-
-      print("frvr-->" + jsonsDataString);
-
-      if (data["status"] == true) {
-        final LocalStorage storage = LocalStorage('user-info');
-        storage.setItem('info', jsonsDataString);
-        var data = await jsonDecode(storage.getItem('info'))!;
-
-
-        AppData.username = data["full_name"];
-
-        print("after store the data----->>> ${storage.getItem('info')}");
-
-        Navigator.pushNamed(context, RouteGenerator.bottomBar);
-        CSnackBar.successSnackBar(context, data["message"]);
-      } else {
-        CSnackBar.errorSnackBar(context, data["message"]);
-      }
-      print(data["status"]);
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      throw Exception('Failed to create album.');
-    }
-    // _Database = await openDB();
-    // // UserRepo userRepo = new UserRepo();
-    // // userRepo.createtable(_Database);
-    //
-    // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
-    // await _Database?.insert("users",userModel.toMap());
-    // await _Database?.close();
   }
 }

@@ -7,6 +7,7 @@ import 'package:fithouse_app/presentation/themes/f_h_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import '../../../utils/App_data.dart';
 import '../../../utils/route_generator.dart';
 import '../../widgets/c-snack_bar.dart';
 import '../../widgets/f_h_back_app_bar.dart';
@@ -174,8 +175,7 @@ class _SignupUIState extends State<SignupUI> {
                               prefixIcon: Icon(Icons.account_circle_sharp),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: FHColor.bgTextFieldColor,
-                                    width: 1.7),
+                                    color: FHColor.appColor, width: 1.7),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
@@ -232,8 +232,7 @@ class _SignupUIState extends State<SignupUI> {
                               prefixIcon: Icon(Icons.phone),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: FHColor.bgTextFieldColor,
-                                    width: 1.7),
+                                    color: FHColor.appColor, width: 1.7),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
@@ -298,8 +297,7 @@ class _SignupUIState extends State<SignupUI> {
                               prefixIcon: Icon(Icons.email_outlined),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: FHColor.bgTextFieldColor,
-                                    width: 1.7),
+                                    color: FHColor.appColor, width: 1.7),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
@@ -406,6 +404,8 @@ class _SignupUIState extends State<SignupUI> {
     storage.setItem('Signup_data', mapData);
 
     print("after store the data----->>> ${storage.getItem('Signup_data')}");
+    AppData.signUpData = storage.getItem('Signup_data');
+    print("app data----->>> ${storage.getItem('Signup_data')}");
     var setList = await OtpVaidate();
     // final response = await http.post(
     //   Uri.parse('http://172.105.60.113/fithouse/fithouse/api/signup.php'),

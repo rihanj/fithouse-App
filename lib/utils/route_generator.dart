@@ -1,3 +1,4 @@
+import 'package:fithouse_app/presentation/pages/login/cubit/login_cubit.dart';
 import 'package:fithouse_app/presentation/pages/onboarding/on_bording_page.dart';
 import 'package:fithouse_app/presentation/pages/signup/birthday_picker.dart';
 import 'package:fithouse_app/presentation/pages/signup/current_weight.dart';
@@ -8,6 +9,7 @@ import 'package:fithouse_app/presentation/pages/signup/active_list.dart';
 import 'package:fithouse_app/presentation/pages/signup/signup_ui.dart';
 import 'package:fithouse_app/presentation/pages/signup/target_weight.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../presentation/bottom_bar/bottom-bar.dart';
 import '../presentation/pages/Home/Home.dart';
 import '../presentation/pages/login/login_ui.dart';
@@ -42,7 +44,9 @@ class RouteGenerator {
       case onBoardsRoute:
         return PageNavigation.push(OnbordingScreen(), false);
       case loginRoute:
-        return PageNavigation.push(LoginUI(), false);
+        return PageNavigations.push(
+            child: BlocProvider(
+                create: (context) => LoginCubit(), child: const LoginUI()));
       case signupRoute:
         return PageNavigation.push(SignupUI(), false);
       case aftersignup:
@@ -70,9 +74,9 @@ class RouteGenerator {
 
       case bottomBar:
         return PageNavigation.push(BottomBar(), false);
-        // PageNavigation.push(
-        //     child: BlocProvider(
-        //         create: (context) => OmProfileCubit(), child: OMProfile()));
+      // PageNavigation.push(
+      //     child: BlocProvider(
+      //         create: (context) => OmProfileCubit(), child: OMProfile()));
 
       case afterLogin:
         return PageNavigation.push(Home(), false);
