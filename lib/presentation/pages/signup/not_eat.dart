@@ -17,7 +17,7 @@ class _MultiSelectableContainersState extends State<MultiSelectableContainers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:FHAppWidget.appBar(context, "FitHouse"),
+        appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
         body: Container(
           child: Column(
             children: [

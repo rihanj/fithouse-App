@@ -33,6 +33,12 @@ class AppTheme{
       fontSize: getFont(14),
       fontWeight: FontWeight.normal
   );
+  static TextStyle hintTextStyle2 = TextStyle(
+      color: Colors.black38,
+      fontFamily: "Roboto",
+      fontSize: getFont(14),
+      fontWeight: FontWeight.normal
+  );
 
   static TextStyle captionTextStyle(bool isLight){
     return TextStyle(

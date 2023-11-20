@@ -7,6 +7,8 @@ import 'package:fithouse_app/presentation/themes/f_h_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import '../../../data/model/user_details_model.dart';
+import '../../../generated/l10n.dart';
 import '../../../utils/App_data.dart';
 import '../../../utils/route_generator.dart';
 import '../../widgets/c-snack_bar.dart';
@@ -47,7 +49,7 @@ class _SignupUIState extends State<SignupUI> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        leading: Icon(
+        leading: const Icon(
           Icons.arrow_back,
           color: FHColor.appColor,
           size: 24,
@@ -58,17 +60,17 @@ class _SignupUIState extends State<SignupUI> {
             children: [
               IconButton(
                 onPressed: () {},
-                icon: Icon(
+                icon: const Icon(
                   Icons.support_agent,
                   color: FHColor.appColor,
                   size: 24,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
+               Padding(
+                padding: EdgeInsets.only(right: 12.0),
                 child: Text(
-                  'Help',
-                  style: TextStyle(
+                  S.current.appBarHelp,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: FHColor.appColor,
@@ -95,8 +97,8 @@ class _SignupUIState extends State<SignupUI> {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: 'Log in'.toUpperCase(),
-                    style: TextStyle(
+                    text: S.current.loginString.toUpperCase(),
+                    style: const TextStyle(
                       color: Colors.white54,
                       fontFamily: 'BebasNeue',
                       fontWeight: FontWeight.w700,
@@ -111,8 +113,8 @@ class _SignupUIState extends State<SignupUI> {
                       },
                   ),
                   TextSpan(
-                    text: '  Sign up'.toUpperCase(),
-                    style: TextStyle(
+                    text: '  ${S.current.signUpString}'.toUpperCase(),
+                    style: const TextStyle(
                       color: FHColor.whiteColor,
                       fontFamily: 'BebasNeue',
                       fontWeight: FontWeight.w700,
@@ -138,7 +140,7 @@ class _SignupUIState extends State<SignupUI> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(color: Colors.white, spreadRadius: 3),
                 ],
               ),
@@ -152,13 +154,13 @@ class _SignupUIState extends State<SignupUI> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Padding(
+                         Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: SizedBox(
                             height: 20,
                             child: Text(
-                              'Full Name',
-                              style: TextStyle(
+                              S.current.signUpFullName,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 16,
@@ -174,28 +176,28 @@ class _SignupUIState extends State<SignupUI> {
                               filled: true,
                               prefixIcon: Icon(Icons.account_circle_sharp),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                     color: FHColor.appColor, width: 1.7),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
+                              hintStyle: AppTheme.hintTextStyle2,
                               border: OutlineInputBorder(
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Colors.red,
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Colors.red,
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              hintText: "Full Name",
+                              hintText: S.current.signUpFullName,
                               errorText: null,
                               counterText: "",
-                              errorStyle: TextStyle(
+                              errorStyle: const TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold)),
                           validator: (v) {
@@ -207,13 +209,13 @@ class _SignupUIState extends State<SignupUI> {
                             return null;
                           },
                         ),
-                        Padding(
+                         Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: SizedBox(
                             height: 20,
                             child: Text(
-                              'Phone Number',
-                              style: TextStyle(
+                              S.current.PhoneNumberString,
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 16,
@@ -236,7 +238,7 @@ class _SignupUIState extends State<SignupUI> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
+                              hintStyle: AppTheme.hintTextStyle2,
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.red,
@@ -249,7 +251,7 @@ class _SignupUIState extends State<SignupUI> {
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
-                              hintText: "xxxxxxxxxx",
+                              hintText: S.current.PhoneHintString,
                               errorText: null,
                               counterText: "",
                               errorStyle: TextStyle(
@@ -274,12 +276,12 @@ class _SignupUIState extends State<SignupUI> {
                             print('Country changed to: ' + country.name);
                           },
                         ),
-                        const Padding(
+                         Padding(
                           padding: EdgeInsets.all(15.0),
                           child: SizedBox(
                             height: 20,
                             child: Text(
-                              'Email',
+                              S.current.signUpEmail,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
@@ -301,7 +303,7 @@ class _SignupUIState extends State<SignupUI> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               fillColor: FHColor.bgTextFieldColor,
-                              hintStyle: AppTheme.hintTextStyle,
+                              hintStyle: AppTheme.hintTextStyle2,
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.red,
@@ -314,7 +316,7 @@ class _SignupUIState extends State<SignupUI> {
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              hintText: "abc@gmail.com",
+                              hintText: S.current.signUpEmailHint,
                               errorText: null,
                               counterText: "",
                               errorStyle: TextStyle(
@@ -322,9 +324,9 @@ class _SignupUIState extends State<SignupUI> {
                                   fontWeight: FontWeight.bold)),
                           validator: (v) {
                             if (v == null) {
-                              return "Email is Required *";
+                              return S.current.validateEmail;
                             } else if (v.isEmpty) {
-                              return "Email is Required *";
+                              return S.current.validateEmail;
                             }
                             return null;
                           },
@@ -354,7 +356,7 @@ class _SignupUIState extends State<SignupUI> {
                             print("button clicked");
                             // getUser();
                           },
-                          child: Text('Continue',
+                          child: Text(S.current.ContinueString,
                               style:
                                   TextStyle(fontSize: 22, color: Colors.white)),
                         ),
@@ -363,8 +365,8 @@ class _SignupUIState extends State<SignupUI> {
                           child: SizedBox(
                             height: 20,
                             child: Text(
-                              'By continuing, you agree to our Terms and Privacy Policy',
-                              style: TextStyle(
+                              S.current.termsCondition,
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 10,
@@ -384,14 +386,6 @@ class _SignupUIState extends State<SignupUI> {
     );
   }
 
-  //  open db & connect with database
-  // Future<Database?> openDB() async {
-  //   // DatabaseHelper databaseHelper = DatabaseHelper();
-  //   // Database db = await databaseHelper.database;
-  //    _Database = await DatabaseHelper().database;
-  //    print("Anjana");print(_Database );
-  //    return _Database;
-  // }
 
   //insert user in user table
   Future insertUser(context) async {
@@ -405,6 +399,8 @@ class _SignupUIState extends State<SignupUI> {
 
     print("after store the data----->>> ${storage.getItem('Signup_data')}");
     AppData.signUpData = storage.getItem('Signup_data');
+    UserDetailsModel userDetailsModel =  UserDetailsModel.fromJson(mapData);
+    AppData.userDetails =  userDetailsModel;
     print("app data----->>> ${storage.getItem('Signup_data')}");
     var setList = await OtpVaidate();
     // final response = await http.post(
@@ -475,52 +471,11 @@ class _SignupUIState extends State<SignupUI> {
       String jsonsDataString = response.body.toString(); //
       var data = jsonDecode(jsonsDataString);
       print(data);
-      // if (data["status"] == true) {
       Navigator.pushNamed(context, RouteGenerator.aftersignup);
-      //   CSnackBar.successSnackBar(context, data["message"]);
-      // } else {
-      //   CSnackBar.errorSnackBar(context, data["message"]);
-      // }
-      // print(data["status"]);
+
     } else {
       throw Exception('Failed to create album.');
     }
   }
 
-// Future<void> getUser() async{
-//   _Database = await openDB();
-//   UserRepo userRepo = new UserRepo();
-//   userRepo.getUsers(_Database);
-//   // await _Database?.close();
-// }
-
-// Future<void> checkLogin() async{
-//   final response = await http.get(
-//     Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php?phone=555555555'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{
-//       'title': fullNameController.text.toString(),
-//     }),
-//   );
-//
-//   if (response.statusCode == 200 || response.statusCode == 201) {
-//     // If the server did return a 201 CREATED response,
-//     // then parse the JSON.
-//     print("Reached here");
-//     print(response);
-//   } else {
-//     // If the server did not return a 201 CREATED response,
-//     // then throw an exception.
-//     throw Exception('Failed to create album.');
-//   }
-//   // _Database = await openDB();
-//   // // UserRepo userRepo = new UserRepo();
-//   // // userRepo.createtable(_Database);
-//   //
-//   // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
-//   // await _Database?.insert("users",userModel.toMap());
-//   // await _Database?.close();
-// }
 }

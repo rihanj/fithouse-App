@@ -2,6 +2,7 @@ import 'package:fithouse_app/presentation/widgets/f_h_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../../config/size_config.dart';
+import '../../../generated/l10n.dart';
 import '../../themes/f_h_colors.dart';
 import '../../widgets/f_h_themes.dart';
 
@@ -27,13 +28,13 @@ class OnboardingScreen extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: 30.0),
                   Text(
-                    'MEAL PLANS FOR BUSY PEOPLE',
+                    S.current.getStartedTitle,
                      style: AppTheme.textH2,
                      textAlign: TextAlign.left,
                   ),
                   SizedBox(height: 15.0),
                   Text(
-                    'Our meal plans are cooked with love & portioned to suit your body,fitness goal and taste buds.',
+                    S.current.getStartedSubTitle,
                     style: AppTheme.hintTextStyle,
                     textAlign: TextAlign.left,
                   ),
@@ -60,7 +61,7 @@ class OnboardingScreen extends StatelessWidget {
                   // );
                   },
                 child: Text(
-                  'GET STARTED',
+                  S.current.getStartedButton,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -89,8 +90,8 @@ class OnboardingScreen extends StatelessWidget {
 
                     ),
                     onPressed: (){},
-                    child: Text("LOG IN",
-                      style: TextStyle(fontSize: 22)
+                    child: Text( S.current.getStartedLoginButton,
+                      style: const TextStyle(fontSize: 22)
                     ),
                 )
               ),

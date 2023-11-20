@@ -42,7 +42,7 @@ class _TargetWeightState extends State<TargetWeight> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:FHAppWidget.appBar(context, "FitHouse"),
+      appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
       body: SingleChildScrollView(
         child: Column(
           children: [

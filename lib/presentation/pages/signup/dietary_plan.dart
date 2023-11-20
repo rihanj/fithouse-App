@@ -17,7 +17,7 @@ class _DietaryPlanState extends State<DietaryPlan> {
   Widget build(BuildContext context) {
     bool isTapped = false;
     return Scaffold(
-        appBar:FHAppWidget.appBar(context, "FitHouse"),
+        appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
         body: SingleChildScrollView(
           child: Column(
             children: [

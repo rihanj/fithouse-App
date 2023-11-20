@@ -4,11 +4,13 @@ import '../themes/f_h_colors.dart';
 
 class FHAppWidget{
 
-  static PreferredSizeWidget appBar(BuildContext context,String title,{bool? isReturn}){
+  static PreferredSizeWidget appBar(BuildContext context,String title,Color color,bool isWillPop,{bool? isReturn}){
     return AppBar(
+      elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
+     backgroundColor: Colors.grey.shade100,
       leading:
+      isWillPop ?
       IconButton(
         iconSize: 24,
         color: FHColor.appColor,
@@ -18,16 +20,16 @@ class FHAppWidget{
         onPressed: () {
           Navigator.pop(context);
         },
-      ),
+      ):null,
 
       title: Text(
-        "fithouse".toUpperCase(),
-        style: const TextStyle(
+        title.toUpperCase(),
+        style:  TextStyle(
           fontFamily: 'BebasNeue',
           fontWeight: FontWeight.w700,
           fontSize: 30,
           letterSpacing: 2,
-          color: FHColor.appColor,
+          color:color,
         ),
       ),
       toolbarHeight: 80,
