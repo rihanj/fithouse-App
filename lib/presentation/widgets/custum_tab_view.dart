@@ -1,25 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../themes/f_h_colors.dart';
+
 class CustomTabView extends StatefulWidget {
   const CustomTabView({
     super.key,
     required this.itemCount,
     required this.tabBuilder,
     required this.pageBuilder,
+    required this.height,
     this.stub,
     this.onPositionChange,
     this.onScroll,
     this.initPosition,
+    this.bgColor,
+    this.selectedLabelColor,
+    this.borderRadius,
+    this.decoration,
+    this.labelPadding,
   });
 
   final int itemCount;
   final IndexedWidgetBuilder tabBuilder;
+  final double height;
   final IndexedWidgetBuilder pageBuilder;
   final Widget? stub;
   final ValueChanged<int>? onPositionChange;
   final ValueChanged<double>? onScroll;
   final int? initPosition;
+  final Color? bgColor;
+  final Color? selectedLabelColor;
+  final BorderRadius? borderRadius;
+  final BoxDecoration? decoration;
+  final EdgeInsets? labelPadding;
 
   @override
   CustomTabsState createState() => CustomTabsState();
@@ -104,24 +118,20 @@ class CustomTabsState extends State<CustomTabView>
           alignment: Alignment.center,
           child: TabBar(
             isScrollable: true,
+            labelPadding: widget.labelPadding,
             controller: controller,
-            labelColor: Theme.of(context).primaryColor,
+            labelColor: widget.selectedLabelColor,
             unselectedLabelColor: Theme.of(context).hintColor,
-            indicator: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 2,
-                ),
-              ),
-            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicator: widget.decoration,
             tabs: List.generate(
               widget.itemCount,
               (index) => widget.tabBuilder(context, index),
             ),
           ),
         ),
-        Expanded(
+        SizedBox(
+          height: widget.height,
           child: TabBarView(
             controller: controller,
             children: List.generate(

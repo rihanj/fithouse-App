@@ -46,7 +46,7 @@ class _BirthdayPickerState extends State<BirthdayPicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:FHAppWidget.appBar(context, "FitHouse"),
+      appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
       body: SingleChildScrollView(
         child: Column(
           children: [

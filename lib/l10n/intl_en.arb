@@ -1,0 +1,77 @@
+{
+    "appBarHelp":"Help",
+    "fitHouse":"Fithouse",
+    "getStartedTitle":"MEALS PLANS FOR BUSY PEOPLE",
+    "getStartedSubTitle":"Our meal plans are cooked with love & portioned to suit your body,fitness goal and taste buds.",
+    "getStartedButton":"GET STARTED",
+    "getStartedLoginButton":"LOG IN",
+    "loginString":"LOG IN",
+    "signUpString":"SIGN UP",
+    "signUpFullName":"Full Name",
+    "signUpFullName":"Full Name",
+    "PhoneNumberString":"Phone Number",
+    "PhoneHintString":"5XXXXXXXXX",
+    "signUpEmail":"Email",
+    "signUpEmailHint":"abc@gmail.com",
+    "ContinueString":"Continue",
+    "login":"Login",
+    "verificationCode":"Verification Code",
+    "resendCode":"Resend Code",
+    "SendCode":"Send Otp",
+    "CounterResendCode":"Resend Code in",
+    "termsCondition" : "By continuing, you agree to our Terms and Privacy Policy ",
+    "validationFullName" : "Full Name is Required",
+    "validatePhone":"Enter a valid Phone number",
+    "inValidatePhone":"Invalid Mobile Number",
+    "validateEmail":"Enter a valid Email Address",
+    "pleaseWait":"Please Wait",
+    "WelcomeBack":"Welcome back",
+    "delivery":"Delivery",
+    "progress":"Progress",
+    "support":"Support",
+    "Account":"Account",
+    "Account":"Account",
+    "Profile":"Profile",
+    "ProfileReward":"Rewards",
+    "ProfileRewardPoints":"You have {section} points",
+    "@ProfileRewardPoints": {
+      "placeholders": {
+        "section": {}
+      }
+    },
+    "ProfileRemaining":"{day} days remaining",
+    "@ProfileRemaining": {
+      "placeholders": {
+        "day": {}
+      }
+    },
+
+    "ProfileLast":"{date} last delivery",
+    "@ProfileRemaining": {
+      "placeholders": {
+        "date": {}
+      }
+    },
+
+    "ProfilePauseSubscription":"Pause Subscription",
+    "ProfileDietaryPlan":"Dietary Plan",
+    "ProfilePackageAndDays":"Packages & Days",
+    "ProfileTargetCalories":"Target Calories",
+    "ProfileIngredientWarnings":"Target Calories",
+    "ProfileFavorites":"Favorites",
+    "ProfileAutomaticTracking":"Automatic Tracking",
+    "ProfileAddress":"Address",
+    "ProfileDeliveryTime":"Delivery Time",
+    "ProfileLanguage":"Language",
+    "ProfileCutlery":"Cutlery",
+    "ProfileSaveEnv":"off by default to save the environment",
+    "ProfileOffers":"Get {offer} SAR",
+     "@ProfileRemaining": {
+          "placeholders": {
+            "offer": {}
+          }
+        },
+     "ProfilePaymentHistory":"Payment History",
+     "ProfilePaymentMethod":"Payment Method",
+     "ProfileLogOut":"LOGOUT"
+}

@@ -1,16 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:fithouse_app/config/js_log.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
+import '../../../../data/data_provider/cache_service_imp.dart';
+import '../../../../data/model/user_details_model.dart';
+import '../../../../data/repository/login_repo.dart';
+import '../../../../domain/repositories/login_repo.dart';
 import '../../../../utils/App_data.dart';
 import '../../../../utils/route_generator.dart';
 import '../../../widgets/c-snack_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_state.dart';
 
@@ -20,47 +27,30 @@ class LoginCubit extends Cubit<LoginState> {
   bool disableButton = false;
   bool isButtonEnabled = false;
   bool isLoading = false;
+  int timerCount = 60;
+  bool isTimerFinished = false;
+
+  countDownTimer() async {
+    timerCount = 60;
+    isTimerFinished = false;
+    for (int x = 60; x > 0; x--) {
+      await Future.delayed(Duration(seconds: 1)).then((_) {
+        if (timerCount == 1) isTimerFinished = true;
+
+        timerCount -= 1;
+      });
+      emit(RefCounterState());
+    }
+  }
 
   TextEditingController mobileNumberController = TextEditingController();
   TextEditingController verificationCodeController = TextEditingController();
-
-  bool isTimerRunning = false;
-  int secondsRemaining = 60;
-  Timer? _timer;
-
-  void startTimer() {
-    isTimerRunning = true;
-    secondsRemaining = 60;
-    isButtonEnabled = false;
-    String buttonText = 'Resend OTP $secondsRemaining';
-
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      secondsRemaining--;
-
-      if (secondsRemaining <= 0) {
-        stopTimer();
-      }
-    });
-  }
-
-  void stopTimer() {
-    isTimerRunning = false;
-    String buttonText = 'Resend OTP';
-    isButtonEnabled = true;
-
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-  }
 
   LoginCubit() : super(LoginInitial());
 
   Future send_otp(context) async {
     emit(LoadingOp());
-    print("send otp function");
-
     isLoading = true;
-
     print(isLoading);
     var phone = mobileNumberController.text;
     final mapData = {
@@ -81,81 +71,61 @@ class LoginCubit extends Cubit<LoginState> {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print("Inside if");
-      startTimer();
-
+      // startTimer();
+      countDownTimer();
       isLoading = false;
-
+      isMobileNumberEntered = true;
       var otp_data = {"otp": "123456"};
       final LocalStorage storage = await LocalStorage('Login-otp');
       storage.setItem('Login_otp', otp_data);
       String jsonsDataString = response.body.toString(); //
       var data = jsonDecode(jsonsDataString);
-      CSnackBar.successSnackBar(context, "OTP Send Successfully");
-      emit(RefreshState());
+
+      emit(SendOtp());
     }
   }
 
   Future loginUser(context) async {
+    ILoginRepo services = LoginRepoImp();
     isLoading = true;
     emit(LoadingOp());
-    print(isLoading);
-    print("Login user function");
-    var code = verificationCodeController.text;
-    print(code);
-    final LocalStorage storage = await LocalStorage('Login-otp');
-    var SendOtp = storage.getItem('Login_otp');
-    print(SendOtp['otp']);
-    if (code == SendOtp['otp']) {
-      final mapData = {
-        "phone": mobileNumberController.text,
-      };
+    try {
+      print("Login user function");
+      var code = verificationCodeController.text;
+      print(code);
+      final LocalStorage storage = await LocalStorage('Login-otp');
+      var SendOtp = await storage.getItem('Login_otp');
+      // print(SendOtp['otp']);
+      if (code == "123456"
+          // SendOtp['otp']
+          ) {
+        final mapData = {
+          "phone": mobileNumberController.text,
+        };
+        var d = await services.getUser(mapData);
 
-      final response = await http.post(
-        Uri.parse('http://172.105.60.113/fithouse/fithouse/api/login.php'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(mapData),
-      );
+        print("data is here--->>>"+d.toString());
+        UserDetailsModel response = d;
 
-      print(mapData);
-      // print(response.body.toString());
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // If the server did return a 201 CREATED response,
-        String jsonsDataString = response.body.toString(); //
-        var data1 = jsonDecode(jsonsDataString);
-        print("frvr-->" + jsonsDataString);
-        isLoading = false;
-        if (data1["status"] == true) {
-          final LocalStorage storage = LocalStorage('user-info');
-          storage.setItem('info', jsonsDataString);
-          var data = await jsonDecode(storage.getItem('info'))!;
-          // var userInfo = await storage.getItem('user-info');
-          // var userInfo1 = json.decode(userInfo);
+        JSLog.tagInfo(tag: "login data", msg: response.toString());
 
-          AppData.sub_id = data1['subscripton'];
-          AppData.username = data["full_name"];
-          Navigator.pushNamed(context, RouteGenerator.bottomBar);
-          CSnackBar.successSnackBar(context, data["message"]);
+        if (response != null) {
+          isLoading = false;
+          CacheServiceImp().setLogin(true);
+          // AppData.sub_id = response.subscripton!;
+          AppData.subscriptionStatus = response.subscriptionStatus.toString();
+
+          // AppData.username = response.fullName.toString();
+          emit(SuccessOtp(response));
         } else {
-          CSnackBar.errorSnackBar(context, data1["message"]);
-          emit(RefreshState());
+          isLoading = false;
+          emit(ErrorIncorrectOtp());
         }
-        emit(RefreshState());
       }
-    } else {
-      CSnackBar.errorSnackBar(context, "Incorrect OTP");
-      emit(RefreshState());
+    } catch (e) {
+      isLoading = false;
+      JSLog.error(msg: e);
     }
-
-    //   // _Database = await openDB();
-    //   // // UserRepo userRepo = new UserRepo();
-    //   // // userRepo.createtable(_Database);
-    //   //
-    //   // UserModel userModel = new UserModel(fullNameController.text.toString(),emailCodeController.text.toString(),int.tryParse(mobileNumberController.text.toString())!);
-    //   // await _Database?.insert("users",userModel.toMap());
-    //   // await _Database?.close();
-    // }
   }
 
   buttonDisable(value) {

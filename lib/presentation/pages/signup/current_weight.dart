@@ -61,7 +61,7 @@ class _CurrentWeightState extends State<CurrentWeight> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:FHAppWidget.appBar(context, "FitHouse"),
+        appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
         body: SingleChildScrollView(
           child: Column(
             children: [

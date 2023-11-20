@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../../../data/data_provider/cache_service_imp.dart';
 import '../../../utils/route_generator.dart';
 import '../../themes/f_h_colors.dart';
@@ -58,7 +58,7 @@ class _DeliveryLocationState extends State<DeliveryLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:FHAppWidget.appBar(context, "FitHouse"),
+      appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
       body: Container(
         child: Stack(
           children: [
@@ -158,10 +158,28 @@ class _DeliveryLocationState extends State<DeliveryLocation> {
                 right: 16.0, // Adjust the right position as needed
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Button click logic
-                    Navigator.pushNamed(context, RouteGenerator.confirmRoute);
+                  onPressed: ()
+                  async {
+                    checkLocationPermission(context);
+                    // await Permission.location.request();
+                    // if (await Permission.location.request().isGranted) {
+                    //   Navigator.pushNamed(context, RouteGenerator.confirmRoute);
+                    //   // Either the permission was already granted before or the user just granted it.
+                    //   print("Location Permission is granted");
+                    // }else{
+                    //   print("Location Permission is denied.");
+                    // }
                   },
+                  // async{
+                  //
+                  //   if(await Permission.location.serviceStatus.isEnabled){
+                  //     Navigator.pushNamed(context, RouteGenerator.confirmRoute);
+                  //   }else{
+                  //
+                  //   }
+                  //   // Button click logic
+                  //
+                  // },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: FHColor.appColor,
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -221,5 +239,26 @@ class _DeliveryLocationState extends State<DeliveryLocation> {
       //   child: Icon(Icons.local_activity),
       // ),
     );
+  }
+  Future<void> checkLocationPermission(context) async {
+    // Check if location permissions are granted
+    PermissionStatus status = await Permission.location.status;
+    if (status == PermissionStatus.denied) {
+      // Request location permissions
+      status = await Permission.location.request();
+      if (status != PermissionStatus.granted) {
+
+        // Handle case where user has not granted location permissions
+        return;
+      }else{
+        Navigator.pushNamed(context, RouteGenerator.confirmRoute);
+      }
+    }else{
+      Navigator.pushNamed(context, RouteGenerator.confirmRoute);
+    }
+
+    // Location permissions are granted
+    // Now you can use the location data
+    // ...
   }
 }

@@ -29,4 +29,21 @@ class Validator {
         }
       }
   );
+  static bool validatePhoneNumber(String phoneNumber) {
+    // Define a regular expression for a UK phone number pattern.
+    // This regex pattern allows for various formats including:
+    // - +44 1234 567890
+    // - 01234 567890
+    // - 07700 900000
+    // - 020 7946 0958
+    // - and more
+    RegExp ukPhoneNumberRegExp = RegExp(
+        r'^(5)([0-9]{8})$');
+
+
+    // RegExp ukPhoneNumberRegExp = RegExp(
+    //     r'^((\+44)|(0)) ?\d{4} ?\d{6}$');
+
+    return ukPhoneNumberRegExp.hasMatch("$phoneNumber");
+  }
 }

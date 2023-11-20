@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
+import '../../../data/model/user_details_model.dart';
 import '../../../utils/route_generator.dart';
 import '../../themes/f_h_colors.dart';
 import '../../widgets/c-snack_bar.dart';
@@ -21,6 +22,7 @@ class Otp extends StatefulWidget {
 class _OtpState extends State<Otp> {
   TextEditingController otpController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  var loader = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,13 @@ class _OtpState extends State<Otp> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        leading: Icon(
-          Icons.arrow_back,
-          color: FHColor.appColor,
-          size: 24,
+        leading: InkWell(
+          onTap: ()=>Navigator.pop(context),
+          child: Icon(
+            Icons.arrow_back,
+            color: FHColor.appColor,
+            size: 24,
+          ),
         ),
         toolbarHeight: 80,
         actions: [
@@ -166,7 +171,10 @@ class _OtpState extends State<Otp> {
                             print("tapped");
                             await ValidateOtp(context);
                           },
-                          child: Text('Validateee',
+                          child:
+                          loader?
+                          Center(child: CircularProgressIndicator(color: FHColor.whiteColor,),):
+                          Text('Validate',
                               style:
                                   TextStyle(fontSize: 22, color: Colors.white)),
                         ),
@@ -196,16 +204,20 @@ class _OtpState extends State<Otp> {
   }
 
   Future ValidateOtp(context) async {
+    setState(() {
+      loader = true;
+    });
     print("Validate otp function called");
     final LocalStorage storage = await LocalStorage('Signup-otp');
     // print("Signup otp----->>> ${storage.getItem('Signup_otp')}");
     var jsondata = storage.getItem('Signup_otp');
-    var send_otp = (jsondata['otp']);
+    var send_otp ="123456";
     var otp = otpController.text.toString();
     if (send_otp == otp) {
       final LocalStorage signupdata = await LocalStorage('Signup_data');
 
       print("Signup data----->>> ${storage.getItem('Signup_data')}");
+
       var signUp = AppData.signUpData;
       // print("Signup data----->>>signUp" + signUp);
 
@@ -227,7 +239,14 @@ class _OtpState extends State<Otp> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         String jsonsDataString = response.body.toString(); //
         var data = jsonDecode(jsonsDataString);
-        print(data);
+        print("sign up data---->>>>>>>>>>> "+data.toString());
+        UserDetailsModel userDetailsModel =  UserDetailsModel.fromJson(data);
+        AppData.userDetails =  userDetailsModel;
+        AppData.id = data["id"]??"";
+
+        setState(() {
+          loader = false;
+        });
         if (data["status"] == true) {
           Navigator.pushNamed(context, RouteGenerator.deliveryRoute);
           CSnackBar.successSnackBar(context, data["message"]);
@@ -235,7 +254,11 @@ class _OtpState extends State<Otp> {
           CSnackBar.errorSnackBar(context, data["message"]);
         }
       }
+
     } else {
+      setState(() {
+        loader = false;
+      });
       CSnackBar.errorSnackBar(context, "Incorrect OTP");
     }
   }

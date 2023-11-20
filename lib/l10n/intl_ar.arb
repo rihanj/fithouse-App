@@ -1,0 +1,74 @@
+{
+    "appBarHelp":"يساعد",
+    "fitHouse":"فيت هاوس",
+    "getStartedTitle":"خطط الوجبات للأشخاص المشغولين",
+    "getStartedSubTitle":"يتم إعداد خطط الوجبات الخاصة بنا بكل حب وتقسيمها لتناسب جسمك وهدف اللياقة البدنية وذوقك.",
+    "getStartedButton":"البدء",
+    "getStartedLoginButton":"تسجيل الدخول",
+    "loginString":"تسجيل الدخول",
+    "signUpString":"اشتراك",
+    "signUpFullName":"الاسم الكامل",
+    "PhoneNumberString":"رقم التليفون",
+    "PhoneHintString":"XXXXXXXXX5",
+    "signUpEmail":"بريد إلكتروني",
+    "signUpEmailHint":"abc@gmail.com",
+    "ContinueString":"يكمل",
+    "verificationCode":"رمز التحقق",
+    "resendCode":"أعد إرسال الرمز",
+    "SendCode":"إرسال مكتب المدعي العام",
+    "CounterResendCode":"إعادة إرسال الرمز في",
+    "termsCondition" : "من خلال المتابعة، فإنك توافق على الشروط وسياسة الخصوصية الخاصة بنا ",
+    "validationFullName" : "الإسم الكامل ضروري",
+    "validatePhone":"أدخل رقم هاتف صالحًا",
+    "inValidatePhone":"رقم الجوال غير صالح",
+    "validateEmail":"أدخل عنوان بريد إلكتروني صالح",
+    "pleaseWait":"انتظر من فضلك",
+    "WelcomeBack":"مرحبًا بعودتك",
+    "delivery":"توصيل",
+    "progress":"تقدم",
+    "support":"يدعم",
+    "Account":"حساب",
+    "Profile":"حساب تعريفي",
+    "ProfileReward":"المكافآت",
+    "ProfileRewardPoints":"لديك {section} نقاط",
+    "@ProfileRewardPoints": {
+      "placeholders": {
+        "section": {}
+      }
+    },
+    "ProfileRemaining":"{day} الأيام المتبقية",
+    "@ProfileRemaining": {
+      "placeholders": {
+        "day": {}
+      }
+    },
+
+    "ProfileLast":"{date} التسليم الأخير",
+    "@ProfileRemaining": {
+      "placeholders": {
+        "date": {}
+      }
+    },
+
+    "ProfilePauseSubscription":"إيقاف الاشتراك مؤقتًا",
+    "ProfileDietaryPlan":"الخطة الغذائية",
+    "ProfilePackageAndDays":"الحزم والأيام",
+    "ProfileTargetCalories":"السعرات الحرارية المستهدفة",
+    "ProfileIngredientWarnings":"تحذيرات المكونات",
+    "ProfileFavorites":"المفضلة",
+    "ProfileAutomaticTracking":"التتبع التلقائي",
+    "ProfileAddress":"عنوان",
+    "ProfileDeliveryTime":"موعد التسليم",
+    "ProfileLanguage":"لغة",
+    "ProfileCutlery":"أدوات المائدة",
+    "ProfileSaveEnv":"بشكل افتراضي لحفظ البيئة",
+    "ProfileOffers":"يحصل {offer} SR",
+     "@ProfileRemaining": {
+          "placeholders": {
+            "offer": {}
+          }
+        },
+     "ProfilePaymentHistory":"تاريخ الدفع",
+     "ProfilePaymentMethod":"طريقة الدفع او السداد",
+     "ProfileLogOut":"تسجيل خروج"
+}

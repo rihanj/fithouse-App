@@ -14,9 +14,15 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeCreateState> {
   HomeCubit() : super(HomeCreateInitial());
+  int dateIndex = 0;
 
-  List<String> data = ['Page 0', 'Page 1', 'Page 2'];
-  int initPosition = 1;
+  changeDateIdx(int val) {
+    dateIndex = val;
+  }
+
+  int initPosition = 0;
+
+
   Future<dynamic> getName() async {
     final LocalStorage storage = LocalStorage('user-info');
     var data = await jsonDecode(storage.getItem('info'))!;
@@ -26,23 +32,16 @@ class HomeCubit extends Cubit<HomeCreateState> {
   }
 
   Future<dynamic> getPackage() async {
-    print("function called");
-    var fsub_id = "";
-    // final LocalStorage storage = LocalStorage('user-info');
-    // var subscription = await storage.getItem('info');
-    // final data = json.decode(subscription);
-    // AppData.subscriptionData = data;
-    // print("home data" + data.toString());
-    // var sub_id = AppData.subscriptionData['subscripton'];
-    // print(sub_id);
-    for (var i = 0; i < AppData.sub_id.length; i++) {
-      print("===" + AppData.sub_id[i].toString());
-      var sub_data = AppData.sub_id[i]['Status'].toString();
-      if (sub_data == "Active") {
-        fsub_id = AppData.sub_id[i]['id'].toString();
+    String? fsub_id = "";
+
+    for (var i = 0; i < AppData.userDetails!.subscripton!.length; i++) {
+      bool? sub_data = AppData.userDetails!.status;
+
+      if (sub_data == true) {
+        fsub_id = AppData.userDetails!.subscripton![i]!.id;
       }
     }
-    print("fsub_id-->" + fsub_id);
+    // print("fsub_id-->" + fsub_id);
     final mapData = {"id": fsub_id};
     print("fsub_id map data-->" + mapData.toString());
 
@@ -55,13 +54,26 @@ class HomeCubit extends Cubit<HomeCreateState> {
       body: jsonEncode(mapData),
     );
     final d = response.body;
-    final decoded = json.decode(d);
-    HomeModel homeModel = HomeModel.fromJson(decoded);
 
-    print("response-->" + homeModel.breakfast.toString());
-    emit(HomeRefreshState());
+    final decoded = json.decode(d);
+    log("data is here---->>>> " + decoded["meals"].toString());
+
+    HomeModel home = HomeModel.fromJson(decoded);
+    AppData.homeData = home;
+    print("response-->${AppData.homeData!}");
+    emit(HomeSuccessState(home));
   }
 
-  // Future<dynamic> getPackage() async {
-  // }
+  checkData() async {
+    if (AppData.homeData == null) {
+      await getPackage();
+      emit(HomeSuccessState(AppData.homeData!));
+      // emit(HomeRefreshState());
+    } else {
+      emit(HomeSuccessState(AppData.homeData!));
+    }
+  }
+
+// Future<dynamic> getPackage() async {
+// }
 }

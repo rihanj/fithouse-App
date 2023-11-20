@@ -16,7 +16,7 @@ class _GenderSelectionState extends State<GenderSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:FHAppWidget.appBar(context, "FitHouse"),
+      appBar:FHAppWidget.appBar(context, "FitHouse", FHColor.appColor,true),
       body: SingleChildScrollView(
         child: Column(
             children: [
@@ -146,7 +146,7 @@ class _GenderSelectionState extends State<GenderSelection> {
                       // Use the selected gender in your logic
                       if (selectedGender != null) {
                         // Do something with selectedGender
-                        Navigator.pushNamed(context, RouteGenerator.activeRoute);
+                        Navigator.pushNamed(context, RouteGenerator.renewSubscription);
                       }
                     },
                     style: ElevatedButton.styleFrom(
